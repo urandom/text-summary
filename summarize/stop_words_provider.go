@@ -5,7 +5,7 @@ type StopWordsProvider interface {
 	IsStopWord(string) bool
 }
 
-type defaultStopWords struct{}
+type DefaultStopWords struct{}
 
 var defaultStopWordsMap = map[string]bool{
 	"a": true, "about": true, "above": true, "after": true, "again": true,
@@ -26,9 +26,9 @@ var defaultStopWordsMap = map[string]bool{
 	"yourself": true, "yourselves": true,
 }
 
-func (d defaultStopWords) SetLanguage(lang string) {}
+func (d DefaultStopWords) SetLanguage(lang string) {}
 
-func (d defaultStopWords) IsStopWord(word string) bool {
+func (d DefaultStopWords) IsStopWord(word string) bool {
 	_, ok := defaultStopWordsMap[word]
 
 	return ok
