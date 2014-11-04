@@ -2,16 +2,17 @@ package summarize
 
 import "unicode"
 
-type SentenceSplitter interface {
+type TextSplitter interface {
 	Sentences(string) []string
+	Words(string) []string
 }
 
-type DefaultSentenceSplitter struct {
+type DefaultTextSplitter struct {
 	Punctuations []rune
 	Quotes       [][]rune
 }
 
-func (d DefaultSentenceSplitter) Sentences(text string) []string {
+func (d DefaultTextSplitter) Sentences(text string) []string {
 	buf := getBuffer()
 	defer bufferPool.Put(buf)
 
@@ -63,6 +64,30 @@ func (d DefaultSentenceSplitter) Sentences(text string) []string {
 	}
 
 	return sentences
+}
+
+func (d DefaultTextSplitter) Words(text string) []string {
+	buf := getBuffer()
+	defer bufferPool.Put(buf)
+
+	words := []string{}
+
+	for _, r := range text {
+		if unicode.IsLetter(r) {
+			buf.WriteRune(r)
+		} else {
+			if buf.Len() > 0 {
+				words = append(words, buf.String())
+			}
+			buf.Reset()
+		}
+	}
+
+	if buf.Len() > 0 {
+		words = append(words, buf.String())
+	}
+
+	return words
 }
 
 func oneOfPunct(r rune, punct []rune) bool {

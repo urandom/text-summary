@@ -7,7 +7,7 @@ type Summarize struct {
 	Text              string
 	Language          string
 	StopWordsProvider StopWordsProvider
-	SentenceSplitter  SentenceSplitter
+	TextSplitter      TextSplitter
 	EndSentenceRunes  []rune
 	QuoteTuples       [][]rune
 }
@@ -27,10 +27,12 @@ func NewFromString(title, text string) Summarize {
 		Text:              text,
 		Language:          "en",
 		StopWordsProvider: DefaultStopWords{},
-		SentenceSplitter:  DefaultSentenceSplitter{[]rune{'.', '!', '?'}, [][]rune{[]rune{'\'', '\''}, []rune{'"', '"'}, []rune{'`', '`'}}},
+		TextSplitter:      DefaultTextSplitter{[]rune{'.', '!', '?'}, [][]rune{[]rune{'\'', '\''}, []rune{'"', '"'}, []rune{'`', '`'}}},
 	}
 }
 
 func (s Summarize) KeyPoints() []string {
+	//sentenced := s.TextSplitter.Sentences(s.Text)
+
 	return []string{}
 }

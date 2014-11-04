@@ -3,7 +3,7 @@ package summarize
 import "testing"
 
 func TestDefaultSentenceSplitter(t *testing.T) {
-	d := DefaultSentenceSplitter{[]rune{'.', '!', '?'}, [][]rune{[]rune{'\'', '\''}, []rune{'"', '"'}, []rune{'`', '`'}}}
+	d := DefaultTextSplitter{[]rune{'.', '!', '?'}, [][]rune{[]rune{'\'', '\''}, []rune{'"', '"'}, []rune{'`', '`'}}}
 
 	exp := []string{"First sentence", "Second sentence"}
 	res := d.Sentences(text1)
@@ -28,6 +28,20 @@ func TestDefaultSentenceSplitter(t *testing.T) {
 		"To the best of our knowledge, it is the first work to study the partitioning problem for mobile data stream applica- tions, where the optimization is placed on achieving high throughput of processing the streaming data rather than minimizing the makespan of executions as in other appli- cations",
 	}
 	res = d.Sentences(bigText)
+
+	checkSentences(t, exp, res)
+}
+
+func TestDefaultWordSplitter(t *testing.T) {
+	d := DefaultTextSplitter{[]rune{'.', '!', '?'}, [][]rune{[]rune{'\'', '\''}, []rune{'"', '"'}, []rune{'`', '`'}}}
+
+	exp := []string{"First", "sentence", "Second", "sentence"}
+	res := d.Words(text1)
+
+	checkSentences(t, exp, res)
+
+	exp = []string{"Then", "he", "said", "do", "not", "feed", "the", "sharks"}
+	res = d.Words(text3)
 
 	checkSentences(t, exp, res)
 }
