@@ -38,6 +38,8 @@ func NewFromString(title, text string) Summarize {
 }
 
 func (s Summarize) KeyPoints() []string {
+	s.StopWordsProvider.SetLanguage(s.Language)
+
 	sentences := s.TextSplitter.Sentences(s.Text)
 	keywords := s.keywords(s.Text)
 	titleWords := toLower(s.TextSplitter.Words(s.Title))
