@@ -1,7 +1,7 @@
 text-summary
 ============
 
-Text-summary takes some text, and extracts its key points. Its an almost direct port of [PyTeaser](https://raw.githubusercontent.com/xiaoxu193/PyTeaser)
+Text-summary takes some text, and extracts its key points. Its an almost direct port of [PyTeaser](https://github.com/xiaoxu193/PyTeaser)
 
 # From PyTeaser
 
