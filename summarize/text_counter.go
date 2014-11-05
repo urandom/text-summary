@@ -49,7 +49,7 @@ func (tc TextCounter) MostCommon(limit ...int) CommonPairs {
 
 	sort.Sort(sort.Reverse(pairs))
 
-	if len(limit) > 0 {
+	if len(limit) > 0 && len(pairs) > limit[0] {
 		return pairs[:limit[0]]
 	}
 
