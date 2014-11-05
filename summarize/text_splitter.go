@@ -9,7 +9,6 @@ type TextSplitter interface {
 
 type DefaultTextSplitter struct {
 	Punctuations []rune
-	Quotes       [][]rune
 }
 
 func (d DefaultTextSplitter) Sentences(text string) []string {
@@ -17,7 +16,6 @@ func (d DefaultTextSplitter) Sentences(text string) []string {
 	defer bufferPool.Put(buf)
 
 	sentences := []string{}
-	startQuote := -1
 	newSentence := true
 	lastNonWhiteSpace := -1
 
@@ -25,22 +23,9 @@ func (d DefaultTextSplitter) Sentences(text string) []string {
 		if oneOfPunct(r, d.Punctuations) {
 			if buf.Len() > 0 {
 				if lastNonWhiteSpace > 0 {
-					sentences = append(sentences, buf.String()[:lastNonWhiteSpace])
-				}
-				buf.Reset()
-				newSentence = true
-			}
-		} else if startQuote > -1 && d.Quotes[startQuote][1] == r {
-			if lastNonWhiteSpace > 0 {
-				sentences = append(sentences, buf.String()[:lastNonWhiteSpace])
-			}
-			buf.Reset()
-			newSentence = true
-			startQuote = -1
-		} else if startQuote = oneOfStartQuote(r, d.Quotes); startQuote > -1 {
-			if buf.Len() > 0 {
-				if lastNonWhiteSpace > 0 {
-					sentences = append(sentences, buf.String()[:lastNonWhiteSpace])
+					buf.Truncate(lastNonWhiteSpace)
+					buf.WriteRune(r)
+					sentences = append(sentences, buf.String())
 				}
 				buf.Reset()
 				newSentence = true
@@ -59,7 +44,8 @@ func (d DefaultTextSplitter) Sentences(text string) []string {
 	}
 
 	if buf.Len() > 0 && lastNonWhiteSpace > 0 {
-		sentences = append(sentences, buf.String()[:lastNonWhiteSpace])
+		buf.Truncate(lastNonWhiteSpace)
+		sentences = append(sentences, buf.String())
 		buf.Reset()
 	}
 

@@ -3,29 +3,29 @@ package summarize
 import "testing"
 
 func TestDefaultSentenceSplitter(t *testing.T) {
-	d := DefaultTextSplitter{[]rune{'.', '!', '?'}, [][]rune{[]rune{'\'', '\''}, []rune{'"', '"'}, []rune{'`', '`'}}}
+	d := DefaultTextSplitter{[]rune{'.', '!', '?'}}
 
-	exp := []string{"First sentence", "Second sentence"}
+	exp := []string{"First sentence.", "Second sentence"}
 	res := d.Sentences(text1)
 
 	checkSentences(t, exp, res)
 
-	exp = []string{"First sentence"}
+	exp = []string{"First sentence."}
 	res = d.Sentences(text2)
 
 	checkSentences(t, exp, res)
 
-	exp = []string{"Then he said:", "do not feed the sharks"}
+	exp = []string{`Then he said: " do not feed the sharks"`}
 	res = d.Sentences(text3)
 
 	checkSentences(t, exp, res)
 
 	exp = []string{
-		"The contribution of cloud computing and mobile computing technologies lead to the newly emerging mobile cloud com- puting paradigm",
-		"Three major approaches have been pro- posed for mobile cloud applications: 1) extending the access to cloud services to mobile devices; 2) enabling mobile de- vices to work collaboratively as cloud resource providers; 3) augmenting the execution of mobile applications on portable devices using cloud resources",
-		"In this paper, we focus on the third approach in supporting mobile data stream applica- tions",
-		"More specifically, we study how to optimize the com- putation partitioning of a data stream application between mobile and cloud to achieve maximum speed/throughput in processing the streaming data",
-		"To the best of our knowledge, it is the first work to study the partitioning problem for mobile data stream applica- tions, where the optimization is placed on achieving high throughput of processing the streaming data rather than minimizing the makespan of executions as in other appli- cations",
+		"The contribution of cloud computing and mobile computing technologies lead to the newly emerging mobile cloud com- puting paradigm.",
+		"Three major approaches have been pro- posed for mobile cloud applications: 1) extending the access to cloud services to mobile devices; 2) enabling mobile de- vices to work collaboratively as cloud resource providers; 3) augmenting the execution of mobile applications on portable devices using cloud resources.",
+		"In this paper, we focus on the third approach in supporting mobile data stream applica- tions.",
+		"More specifically, we study how to optimize the com- putation partitioning of a data stream application between mobile and cloud to achieve maximum speed/throughput in processing the streaming data.",
+		"To the best of our knowledge, it is the first work to study the partitioning problem for mobile data stream applica- tions, where the optimization is placed on achieving high throughput of processing the streaming data rather than minimizing the makespan of executions as in other appli- cations.",
 	}
 	res = d.Sentences(bigText)
 
@@ -33,7 +33,7 @@ func TestDefaultSentenceSplitter(t *testing.T) {
 }
 
 func TestDefaultWordSplitter(t *testing.T) {
-	d := DefaultTextSplitter{[]rune{'.', '!', '?'}, [][]rune{[]rune{'\'', '\''}, []rune{'"', '"'}, []rune{'`', '`'}}}
+	d := DefaultTextSplitter{[]rune{'.', '!', '?'}}
 
 	exp := []string{"First", "sentence", "Second", "sentence"}
 	res := d.Words(text1)

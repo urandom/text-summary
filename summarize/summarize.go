@@ -31,7 +31,7 @@ func NewFromString(title, text string) Summarize {
 		Text:              text,
 		Language:          "en",
 		StopWordsProvider: DefaultStopWords{},
-		TextSplitter:      DefaultTextSplitter{[]rune{'.', '!', '?'}, [][]rune{[]rune{'\'', '\''}, []rune{'"', '"'}, []rune{'`', '`'}}},
+		TextSplitter:      DefaultTextSplitter{[]rune{'.', '!', '?'}},
 		IdealWordCount:    20,
 	}
 }
@@ -64,7 +64,7 @@ func (s Summarize) KeyPoints() []string {
 
 		freq := (sbs + dbs) / 2 * 10
 		total := (titleScore*1.5 + freq*2 + lengthScore + positionScore) / 4
-		ranks.AddScored(sent, int(total*100))
+		ranks.Add(sent, int(total*100))
 	}
 
 	var keyPoints []string

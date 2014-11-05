@@ -27,17 +27,17 @@ func NewTextCounterFromSlice(words []string) TextCounter {
 	return tc
 }
 
-func (tc TextCounter) Add(text string) {
-	if c, ok := tc[text]; ok {
-		c++
-		tc[text] = c
-	} else {
-		tc[text] = 1
+func (tc TextCounter) Add(text string, score ...int) {
+	sc := 1
+	if len(score) > 0 {
+		sc = score[0]
 	}
-}
 
-func (tc TextCounter) AddScored(text string, score int) {
-	tc[text] = score
+	if c, ok := tc[text]; ok {
+		tc[text] = c + sc
+	} else {
+		tc[text] = sc
+	}
 }
 
 func (tc TextCounter) MostCommon(limit ...int) CommonPairs {
@@ -47,7 +47,7 @@ func (tc TextCounter) MostCommon(limit ...int) CommonPairs {
 		pairs = append(pairs, CommonPair{Text: t, Count: c})
 	}
 
-	sort.Sort(pairs)
+	sort.Sort(sort.Reverse(pairs))
 
 	if len(limit) > 0 {
 		return pairs[:limit[0]]
