@@ -3,6 +3,7 @@ package summarize
 import (
 	"io"
 	"math"
+	"strings"
 )
 
 type Summarize struct {
@@ -39,7 +40,7 @@ func NewFromString(title, text string) Summarize {
 func (s Summarize) KeyPoints() []string {
 	sentences := s.TextSplitter.Sentences(s.Text)
 	keywords := s.keywords(s.Text)
-	titleWords := s.TextSplitter.Words(s.Title)
+	titleWords := toLower(s.TextSplitter.Words(s.Title))
 
 	if len(sentences) <= 5 {
 		return sentences
@@ -55,10 +56,10 @@ func (s Summarize) KeyPoints() []string {
 	}
 
 	for i, sent := range sentences {
-		words := s.TextSplitter.Words(sent)
+		words := toLower(s.TextSplitter.Words(sent))
 		titleScore := s.titleScore(titleMap, words)
 		lengthScore := s.lengthScore(words)
-		positionScore := s.positionScore(i, len(sentences))
+		positionScore := s.positionScore(i+1, len(sentences))
 		sbs := s.sbs(words, keywords)
 		dbs := s.dbs(words, keywords)
 
@@ -79,7 +80,7 @@ func (s Summarize) KeyPoints() []string {
 }
 
 func (s Summarize) keywords(text string) map[string]float64 {
-	allWords := s.TextSplitter.Words(text)
+	allWords := toLower(s.TextSplitter.Words(text))
 	allLen := float64(len(allWords))
 	filteredWords := []string{}
 
@@ -96,14 +97,14 @@ func (s Summarize) keywords(text string) map[string]float64 {
 
 	for _, p := range pairs {
 		score := float64(p.Count) / allLen
-		keyMap[p.Text] = score * 15
+		keyMap[p.Text] = score*1.5 + 1
 	}
 
 	return keyMap
 }
 
 func (s Summarize) titleScore(titleMap map[string]bool, words []string) float64 {
-	count := 0
+	count := 0.0
 
 	for _, w := range words {
 		if _, ok := titleMap[w]; ok && !s.StopWordsProvider.IsStopWord(w) {
@@ -111,11 +112,11 @@ func (s Summarize) titleScore(titleMap map[string]bool, words []string) float64 
 		}
 	}
 
-	return float64(count) / float64(len(words))
+	return count / float64(len(titleMap))
 }
 
 func (s Summarize) lengthScore(words []string) float64 {
-	return 1 - (math.Abs(float64(s.IdealWordCount-len(words))) / float64(s.IdealWordCount))
+	return 1 - math.Abs(float64(s.IdealWordCount-len(words)))/float64(s.IdealWordCount)
 }
 
 func (s Summarize) positionScore(pos, total int) float64 {
@@ -196,4 +197,14 @@ func (s Summarize) dbs(words []string, keywords map[string]float64) float64 {
 
 	k := float64(len(uniqueWords) + 1)
 	return (1 / (k * (k + 1)) * summ)
+}
+
+func toLower(words []string) []string {
+	var lower []string
+
+	for _, w := range words {
+		lower = append(lower, strings.ToLower(w))
+	}
+
+	return lower
 }

@@ -59,9 +59,9 @@ func (d DefaultTextSplitter) Words(text string) []string {
 	words := []string{}
 
 	for _, r := range text {
-		if unicode.IsLetter(r) {
+		if unicode.IsLetter(r) || unicode.IsNumber(r) {
 			buf.WriteRune(r)
-		} else {
+		} else if !unicode.IsOneOf([]*unicode.RangeTable{unicode.Hyphen}, r) {
 			if buf.Len() > 0 {
 				words = append(words, buf.String())
 			}

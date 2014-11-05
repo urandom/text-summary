@@ -44,6 +44,11 @@ func TestDefaultWordSplitter(t *testing.T) {
 	res = d.Words(text3)
 
 	checkSentences(t, exp, res)
+
+	exp = []string{"Three", "things", "are", "outlined", "1", "first", "2", "second", "3", "third"}
+	res = d.Words(text4)
+
+	checkSentences(t, exp, res)
 }
 
 func checkSentences(t *testing.T, exp, res []string) {
@@ -61,6 +66,7 @@ var (
 	text1   = ` First sentence.   Second sentence  `
 	text2   = `First sentence.    `
 	text3   = `Then he said: " do not feed the sharks"`
+	text4   = `Three things are outlined: 1) first; 2) second; 3) third`
 	bigText = `The contribution of cloud computing and mobile computing technologies lead to the newly emerging mobile cloud com- puting paradigm.
 Three major approaches have been pro- posed for mobile cloud applications: 1) extending the access to cloud services to mobile devices; 2) enabling mobile de- vices to work collaboratively as cloud resource providers; 3) augmenting the execution of mobile applications on portable devices using cloud resources.
 In this paper, we focus on the third approach in supporting mobile data stream applica- tions.
