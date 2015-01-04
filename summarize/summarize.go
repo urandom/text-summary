@@ -73,9 +73,16 @@ func (s Summarize) KeyPoints() []string {
 	var keyPoints []string
 
 	mostCommon := ranks.MostCommon(5)
+	commonMap := map[string]bool{}
 
 	for _, p := range mostCommon {
-		keyPoints = append(keyPoints, p.Text)
+		commonMap[p.Text] = true
+	}
+
+	for _, sent := range sentences {
+		if commonMap[sent] {
+			keyPoints = append(keyPoints, sent)
+		}
 	}
 
 	return keyPoints
